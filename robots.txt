@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /
+# Preview copy. The live site (cynthianordstrom.com) allows all crawlers.
