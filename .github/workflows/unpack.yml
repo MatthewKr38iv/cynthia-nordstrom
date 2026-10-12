@@ -1,0 +1,29 @@
+name: unpack-site
+on:
+  push:
+    branches: [main]
+    paths: ['upload/**']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unpack site into the repo root
+        run: |
+          set -e
+          ls upload/
+          cat upload/site.tar.part-* > /tmp/site.tar
+          sha256sum /tmp/site.tar
+          cat upload/site.tar.sha256
+          echo "$(cat upload/site.tar.sha256)  /tmp/site.tar" | sha256sum -c -
+          git rm -r -q upload
+          tar -xf /tmp/site.tar -C .
+          touch .nojekyll
+          git config user.name "Matthew Solomon"
+          git config user.email "333143638+MatthewKr38iv@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Add Cynthia Nordstrom website (static build)"
+          git push
